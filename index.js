@@ -60,8 +60,20 @@ app.post('/pokke', (req, res) => {
   body - contacts, message, subject[email-title]
   > iterate over array of contacts & [sendEmail] or [sendTextMessage] is called
 
-  */ 
-  res.send('Hit /POST pokke path');
+  */
+
+  const { subject, message, contacts } = req.body;
+  console.log('​-------------------------------------------------------');
+  console.log('​subject, message, contacts', subject, message, contacts);
+  console.log('​-------------------------------------------------------');
+
+  // checkers for input
+  if (message !== '' || contacts.length !== 0) {
+    sendPokke(subject, message, contacts);
+    return res.send('Sending pokke.');
+  }
+
+  return res.send('Empty fields.');
 });
 
 function runServer(port = PORT) {
