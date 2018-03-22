@@ -1,24 +1,21 @@
-'use strict';
+
 
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
-const bodyParser = require("body-parser");
+const bodyParser = require('body-parser');
 
-const { PORT, CLIENT_ORIGIN } = require('./config');
+const { PORT } = require('./config');
 const { dbConnect } = require('./db-mongoose');
 
 const isValidApiKey = require('./services/isValidApiKey');
 
 const app = express();
 
-app.use(
-  morgan(process.env.NODE_ENV === 'production' ? 'common' : 'dev', {
-    skip: (req, res) => process.env.NODE_ENV === 'test'
-  })
-);
+app.use(morgan(process.env.NODE_ENV === 'production' ? 'common' : 'dev', { skip: (req, res) => process.env.NODE_ENV === 'test' }));
 
 app.use(cors());
+app.use(bodyParser.json());
 
 // custom auth middleware
 app.use((req, res, next) => {
@@ -27,30 +24,33 @@ app.use((req, res, next) => {
   */
   console.log('Auth middleware');
 
-   if (req.headers.authorization) {
-    const auth = req.headers.authorization.split(" ");
-    let apiKey;
+  if (req.headers.authorization) {
+    const auth = req.headers.authorization.split(' ');
 
-      if (auth[0] === 'Bearer') {
-        apiKey = auth[1];
+    if (auth[0] === 'Bearer') {
+      // array destructing [ 0, 1, 2, ....]
+      const [, apiKey] = auth;
 
       console.log('​---------------');
       console.log('​apiKey', apiKey);
       console.log('​---------------');
 
-    /*
-    > check api is valid! 
-    */
-      return next();
+      return isValidApiKey(apiKey)
+        .then((verdict) => {
+          console.log('​-----------------');
+          console.log('​verdict', verdict);
+          console.log('​-----------------');
+
+          return next();
+        })
+        .catch(err => res.status(401).send(err.message));
+    }
+
+    return res.status(401).send('Bad authorization format.');
+  }
 
 
-      }
-
-      return res.status(401).send('Bad authorization format.');
-   }
-
-
-   return res.status(401).send('No authorization/api key in request.');
+  return res.status(401).send('No authorization/api key in request.');
 });
 
 app.post('/pokke', (req, res) => {
@@ -60,7 +60,7 @@ app.post('/pokke', (req, res) => {
   > iterate over array of contacts & [sendEmail] or [sendTextMessage] is called
 
   */
-   res.send('Hit /POST pokke path');
+  res.send('Hit /POST pokke path');
 });
 
 function runServer(port = PORT) {
@@ -68,7 +68,7 @@ function runServer(port = PORT) {
     .listen(port, () => {
       console.info(`App listening on port ${server.address().port}`);
     })
-    .on('error', err => {
+    .on('error', (err) => {
       console.error('Express failed to start');
       console.error(err);
     });

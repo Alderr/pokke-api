@@ -7,9 +7,8 @@ const ApiKeySchema = new Schema({
   key: { type: String, required: true },
   user: { type: Schema.Types.ObjectId, ref: 'Users' },
   usage: { type: Number, default: 0 },
-  //isAvailable
-  //keep track of pastUsage
-  //
+  // isAvailable
+  // keep track of pastUsage
 });
 
 ApiKeySchema.methods.serialize = function () {
