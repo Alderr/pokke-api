@@ -8,7 +8,8 @@ const bodyParser = require('body-parser');
 const { PORT } = require('./config');
 const { dbConnect } = require('./db-mongoose');
 
-const isValidApiKey = require('./services/isValidApiKey');
+const sendPokke = require('./controllers/pokke');
+const isValidApiKey = require('./helpers/isValidApiKey');
 
 const app = express();
 
@@ -59,7 +60,7 @@ app.post('/pokke', (req, res) => {
   body - contacts, message, subject[email-title]
   > iterate over array of contacts & [sendEmail] or [sendTextMessage] is called
 
-  */
+  */ 
   res.send('Hit /POST pokke path');
 });
 
