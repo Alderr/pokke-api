@@ -18,6 +18,32 @@ app.use(
 
 app.use(cors());
 
+// custom auth middleware
+app.use((req, res, next) => {
+  /*
+  > all requests to server need an apiKey; stored in headers.Authorization
+  */
+  console.log('Auth middleware');
+   if (req.headers.authorization) {
+    const apiKey = req.headers.authorization;
+   }
+
+   /*
+   > check api is valid! 
+   */
+
+   res.status(401).send('No authorization/api key in request.');
+});
+
+app.post('/pokke', (req, res) => {
+  /*
+  > client sends items in body
+  body - contacts, message, subject[email-title]
+  > iterate over array of contacts & [sendEmail] or [sendTextMessage] is called
+
+  */
+});
+
 function runServer(port = PORT) {
   const server = app
     .listen(port, () => {
