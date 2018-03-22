@@ -7,8 +7,18 @@ const ApiKeySchema = new Schema({
   key: { type: String, required: true },
   user: { type: Schema.Types.ObjectId, ref: 'Users' },
   usage: { type: Number, default: 0 },
-  // isAvailable
-  // keep track of pastUsage
+  logs: [
+    {
+      date: { type: Number, default: Date.now() },
+      message: { type: String },
+      contacts: [
+        {
+          email: { type: String },
+          phoneNumber: { type: String },
+        },
+      ],
+    },
+  ],
 });
 
 ApiKeySchema.methods.serialize = function () {
@@ -23,3 +33,4 @@ ApiKeySchema.methods.serialize = function () {
 const ApiKeyModel = mongoose.model('ApiKeys', ApiKeySchema);
 
 module.exports = ApiKeyModel;
+
