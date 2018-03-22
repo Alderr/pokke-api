@@ -11,6 +11,7 @@ const ApiKeySchema = new Schema({
     {
       date: { type: Number, default: Date.now() },
       message: { type: String },
+      subject: { type: String },
       contacts: [
         {
           email: { type: String },
