@@ -8,6 +8,8 @@ const bodyParser = require("body-parser");
 const { PORT, CLIENT_ORIGIN } = require('./config');
 const { dbConnect } = require('./db-mongoose');
 
+const isValidApiKey = require('./services/isValidApiKey');
+
 const app = express();
 
 app.use(
@@ -24,15 +26,31 @@ app.use((req, res, next) => {
   > all requests to server need an apiKey; stored in headers.Authorization
   */
   console.log('Auth middleware');
+
    if (req.headers.authorization) {
-    const apiKey = req.headers.authorization;
+    const auth = req.headers.authorization.split(" ");
+    let apiKey;
+
+      if (auth[0] === 'Bearer') {
+        apiKey = auth[1];
+
+      console.log('​---------------');
+      console.log('​apiKey', apiKey);
+      console.log('​---------------');
+
+    /*
+    > check api is valid! 
+    */
+      return next();
+
+
+      }
+
+      return res.status(401).send('Bad authorization format.');
    }
 
-   /*
-   > check api is valid! 
-   */
 
-   res.status(401).send('No authorization/api key in request.');
+   return res.status(401).send('No authorization/api key in request.');
 });
 
 app.post('/pokke', (req, res) => {
@@ -42,6 +60,7 @@ app.post('/pokke', (req, res) => {
   > iterate over array of contacts & [sendEmail] or [sendTextMessage] is called
 
   */
+   res.send('Hit /POST pokke path');
 });
 
 function runServer(port = PORT) {
