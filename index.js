@@ -57,7 +57,9 @@ app.use((req, res, next) => {
 
   return res.status(401).send('No authorization/api key in request.');
 });
-
+app.get('/', (req, res) => {
+  res.send('Pokke.');
+});
 app.post('/pokke', (req, res) => {
   /*
   > client sends items in body
