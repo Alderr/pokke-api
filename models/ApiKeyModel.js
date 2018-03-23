@@ -12,24 +12,12 @@ const ApiKeySchema = new Schema({
       date: { type: Number, default: Date.now() },
       subject: { type: String, default: '' },
       message: { type: String, default: '' },
-      contacts: [
-        {
-          email: { type: String, default: '' },
-          phoneNumber: { type: String, default: '' },
-        },
-      ],
+      contact: { type: String, default: '' },
+      status: { type: String, default: '' },
+      valid: { type: Boolean, default: true },
     },
   ],
 });
-
-ApiKeySchema.methods.serialize = function () {
-  return {
-    _id: this._id,
-    key: this.key,
-    user: this.user,
-    usage: this.usage,
-  };
-};
 
 const ApiKeyModel = mongoose.model('ApiKeys', ApiKeySchema);
 
