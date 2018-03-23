@@ -2,6 +2,7 @@ const isValidEmail = require('../helpers/isValidEmail');
 const isValidPhoneNumber = require('../helpers/isValidPhoneNumber');
 const createDelayedPromise = require('../helpers/createDelayedPromise');
 const sendEmail = require('../services/sendEmail');
+const sendText = require('../services/sendText');
 
 const { SENDER } = require('../config');
 
@@ -12,6 +13,7 @@ const sendPokke = (subject, message, contacts) => {
 
   const arrOfSendEmailCommands = [];
   const arrOfSendTextCommands = [];
+  const arrOfLogs = [];
 
   contacts.forEach((contact) => {
     console.log('​------------------------------');
@@ -37,7 +39,9 @@ const sendPokke = (subject, message, contacts) => {
       };
 
       arrOfSendEmailCommands.push(createDelayedPromise(sendEmail, sendEmailParams));
-    } else if (isValidPhoneNumber(contact)) {
+    }
+
+    else if (isValidPhoneNumber(contact)) {
       console.log('​------------------------------');
       console.log('#: ', contact);
       console.log('​------------------------------');
@@ -46,33 +50,67 @@ const sendPokke = (subject, message, contacts) => {
       > create sendEmailCommand promise w/ req. info
       > store it in sendEmailCommands
       */
-    } else {
+
+      const sendTextParams = {
+        sender: SENDER,
+        message,
+        contact,
+      };
+
+      arrOfSendTextCommands.push(createDelayedPromise(sendText, sendTextParams));
+    }
+
+    else {
       // invalid contact
       console.log('Invalid?!?!');
+      // refer to apiKeyModel - logs.
+      arrOfLogs.push({
+        date: Date.now(),
+        subject,
+        message,
+        contacts: {
+          email: contact,
+          phoneNumber: contact,
+        },
+      });
     }
   });
 
   console.log('Running commands...');
 
-  try {
-    Promise.all(arrOfSendEmailCommands.map(command => command()))
-      .then((responses) => {
-        console.log('​----------------------------------');
-        console.log('Promise.all -> responses', responses);
-        console.log('​----------------------------------');
+  // running all commands to send Email
+  Promise.all(arrOfSendEmailCommands.map(command => command()))
+    .then((responses) => {
+      console.log('​----------------------------------');
+      console.log('Promise.all -> responses', responses);
+      console.log('​----------------------------------');
+      //
+      return responses;
+    })
+    .catch((err) => {
+      console.log('​----------------------');
+      console.log('​Promise.all -> err', err);
+      console.log('​----------------------');
 
-        return responses;
-      })
-      .catch((err) => {
-        console.log('​----------------------');
-        console.log('​Promise.all -> err', err);
-        console.log('​----------------------');
+      return err;
+    });
+    
+  // running all commands to send SMS
+  Promise.all(arrOfSendTextCommands.map(command => command()))
+    .then((responses) => {
+      console.log('​----------------------------------');
+      console.log('Promise.all -> responses', responses);
+      console.log('​----------------------------------');
 
-        return err;
-      });
-  } catch (error) {
-    console.log(error);
-  }
+      return responses;
+    })
+    .catch((err) => {
+      console.log('​----------------------');
+      console.log('​Promise.all -> err', err);
+      console.log('​----------------------');
+
+      return err;
+    });
 };
 
 
