@@ -9,7 +9,7 @@ const saveLogToApiKey = (apiKeyId, log) => {
         }
     }`;
 
-  // variables needed for CreateApiKey_LogInput! in pokke-graphql-server > typeDefs
+  // variables: params needed for CreateApiKey_LogInput! typeDef in pokke-graphql-server > typeDefs
   const { subject, message, contact, status } = log;
   const variables = { input: { _id: apiKeyId, subject, message, contact, status } };
 

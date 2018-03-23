@@ -9,9 +9,8 @@ const saveLogToUser = (userId, log) => {
         }
     }`;
 
-  // variables needed for CreateLogInput! in pokke-graphql-server > typeDefs
+  // variables: params needed for CreateLogInput! typeDef in pokke-graphql-server > typeDefs
   const { apiKey, subject, message, contact, status } = log;
-
   const variables = { input: { _id: userId, apiKey, subject, message, contact, status } };
 
   request(GRAPHQL_SERVER_ENDPOINT, query, variables)

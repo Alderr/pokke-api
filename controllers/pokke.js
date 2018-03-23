@@ -6,6 +6,9 @@ const sendEmail = require('../services/sendEmail');
 const sendText = require('../services/sendText');
 
 const incrementUsageOfApiKey = require('./incrementApiKeyUsage');
+const saveLogToApiKey = require('./saveLogToApiKey');
+const saveLogToUser = require('./saveLogToUser');
+
 
 const { EMAIL_SENDER, SMS_SENDER } = require('../config');
 
@@ -16,6 +19,10 @@ const sendPokke = (userObj, subject, message, contacts) => {
 
   const { _id, key, user } = userObj;
 
+  const apiKey = key;
+  const apiKeyId = _id;
+  const userId = user;
+
   const arrOfSendEmailCommands = [];
   const arrOfSendTextCommands = [];
   const arrOfLogs = [];
@@ -25,9 +32,10 @@ const sendPokke = (userObj, subject, message, contacts) => {
     console.log('​checking contact...', contact);
     console.log('​------------------------------');
 
-    // everytime i loop; regardless of successful/failed pokke; usage increases.
-    incrementUsageOfApiKey(_id);
-    // if validEmal
+    // everytime i loop; regardless of successful/failed sent pokke; usage increases.
+    incrementUsageOfApiKey(apiKeyId);
+
+    // check if validEmail
     if (isValidEmail(contact)) {
       console.log('​------------------------------');
       console.log('​email:', contact);
@@ -46,7 +54,7 @@ const sendPokke = (userObj, subject, message, contacts) => {
 
       arrOfSendEmailCommands.push(createDelayedPromise(sendEmail, sendEmailParams));
     }
-
+    // check if valid phone number!
     else if (isValidPhoneNumber(contact)) {
       console.log('​------------------------------');
       console.log('#: ', contact);
@@ -65,58 +73,71 @@ const sendPokke = (userObj, subject, message, contacts) => {
 
       arrOfSendTextCommands.push(createDelayedPromise(sendText, sendTextParams));
     }
-
+    // invalid contact
     else {
-      // invalid contact
       console.log('Invalid?!?!');
+
       // refer to apiKeyModel - logs.
-      arrOfLogs.push({
+      // saving this log immediately when user sends invalid contact
+      const invalidLog = {
         date: Date.now(),
+        apiKey,
         subject,
         message,
-        contacts: {
-          email: contact,
-          phoneNumber: contact,
-        },
-      });
+        contact,
+        status: 'FAILURE',
+      };
+
+      saveLogToApiKey(apiKeyId, invalidLog);
+      saveLogToUser(userId, invalidLog);
     }
   });
 
   console.log('Running commands...');
 
   // running all commands to send Email
-  // Promise.all(arrOfSendEmailCommands.map(command => command()))
-  //   .then((responses) => {
-  //     console.log('​----------------------------------');
-  //     console.log('Promise.all EMAIL -> responses', responses);
-  //     console.log('​----------------------------------');
-  //     //
-  //     return responses;
-  //   })
-  //   .catch((err) => {
-  //     console.log('​----------------------');
-  //     console.log('​Promise.all EMAIL -> err', err);
-  //     console.log('​----------------------');
+  Promise.all(arrOfSendEmailCommands.map(command => command()))
+    .then((responses) => {
+      console.log('​----------------------------------');
+      console.log('Promise.all EMAIL -> responses', responses);
+      console.log('​----------------------------------');
 
-  //     return err;
-  //   });
+      // look thro responses and see if its a SUCCESS/FAILURE
+      responses.forEach((response) => {
+        console.log('​--------------------------------');
+        console.log('​sendPokke -> response', response);
+        console.log('​--------------------------------');
+      });
+    })
+    .catch((err) => {
+      console.log('​----------------------');
+      console.log('​Promise.all EMAIL -> err', err);
+      console.log('​----------------------');
 
-  // // running all commands to send SMS
-  // Promise.all(arrOfSendTextCommands.map(command => command()))
-  //   .then((responses) => {
-  //     console.log('​----------------------------------');
-  //     console.log('Promise.all SMS -> responses', responses);
-  //     console.log('​----------------------------------');
+      return err;
+    });
 
-  //     return responses;
-  //   })
-  //   .catch((err) => {
-  //     console.log('​----------------------');
-  //     console.log('​Promise.all SMS -> err', err);
-  //     console.log('​----------------------');
+  // running all commands to send SMS
+  Promise.all(arrOfSendTextCommands.map(command => command()))
+    .then((responses) => {
+      console.log('​----------------------------------');
+      console.log('Promise.all SMS -> responses', responses);
+      console.log('​----------------------------------');
 
-  //     return err;
-  //   });
+      // look thro responses and see if its a SUCCESS/FAILURE
+      responses.forEach((response) => {
+        console.log('​--------------------------------');
+        console.log('​sendPokke -> response', response);
+        console.log('​--------------------------------');
+      });
+    })
+    .catch((err) => {
+      console.log('​----------------------');
+      console.log('​Promise.all SMS -> err', err);
+      console.log('​----------------------');
+
+      return err;
+    });
 };
 
 
