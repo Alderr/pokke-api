@@ -33,7 +33,7 @@ const sendPokke = (subject, message, contacts) => {
         sender: SENDER,
         subject: 'App Warning!',
         message: 'yo, watch out. your app broke',
-        contact,
+        contact: [contact],
       };
 
       arrOfSendEmailCommands.push(createDelayedPromise(sendEmail, sendEmailParams));

@@ -13,7 +13,7 @@ const ses = new aws.SES(options);
 const sendEmail = (resolve, reject, funcParams) => {
   const { subject, message, contact, sender } = funcParams;
 
-  let emailParams = {
+  const emailParams = {
     Destination: {
       ToAddresses: contact,
     },
@@ -37,7 +37,17 @@ const sendEmail = (resolve, reject, funcParams) => {
   console.log('​in sendEmail -> params', funcParams);
   console.log('​----------------------------');
 
-  return resolve(emailParams);
+  return ses.sendEmail(emailParams, (err, data) => {
+    if (err) {
+      console.log('error!');
+      console.log(err);
+      reject(err);
+    } else {
+      console.log('success?');
+      console.log(data);
+      resolve(data);
+    }
+  });
 };
 
 
