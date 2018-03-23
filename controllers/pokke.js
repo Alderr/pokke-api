@@ -2,6 +2,7 @@ const isValidEmail = require('../helpers/isValidEmail');
 const isValidPhoneNumber = require('../helpers/isValidPhoneNumber');
 const createDelayedPromise = require('../helpers/createDelayedPromise');
 const sendEmail = require('../services/sendEmail');
+const reflect = require('../services/reflect');
 
 const { SENDER } = require('../config');
 
@@ -31,8 +32,8 @@ const sendPokke = (subject, message, contacts) => {
       */
       const sendEmailParams = {
         sender: SENDER,
-        subject: 'App Warning!',
-        message: 'yo, watch out. your app broke',
+        subject,
+        message,
         contact: [contact],
       };
 
@@ -59,6 +60,15 @@ const sendPokke = (subject, message, contacts) => {
       console.log('​----------------------------------');
       console.log('Promise.all -> responses', responses);
       console.log('​----------------------------------');
+
+      return responses;
+    })
+    .catch((err) => {
+      console.log('​----------------------');
+      console.log('​Promise.all -> err', err);
+      console.log('​----------------------');
+
+      return err;
     });
 };
 

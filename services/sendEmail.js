@@ -41,12 +41,11 @@ const sendEmail = (resolve, reject, funcParams) => {
     if (err) {
       console.log('error!');
       console.log(err);
-      reject(err);
-    } else {
-      console.log('success?');
-      console.log(data);
-      resolve(data);
+      return reject(err);
     }
+    console.log('success?');
+    console.log(data);
+    return resolve(data);
   });
 };
 
