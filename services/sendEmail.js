@@ -37,15 +37,15 @@ const sendEmail = (resolve, reject, funcParams) => {
   console.log('​in sendEmail -> params', funcParams);
   console.log('​----------------------------');
 
-  return ses.sendEmail(emailParams, (err, data) => {
-    if (err) {
+  return ses.sendEmail(emailParams, (error, response) => {
+    if (error) {
       console.log('error!');
-      console.log(err);
-      return reject(err);
+      console.log(error);
+      return reject({ error, subject, message, contact, sender });
     }
     console.log('success?');
-    console.log(data);
-    return resolve(data);
+    console.log(response);
+    return resolve({ response, subject, message, contact, sender });
   });
 };
 

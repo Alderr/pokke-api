@@ -22,9 +22,9 @@ const sendText = (resolve, reject, funcParams) => {
       console.log('​sendText -> response', response);
       console.log('​-------------------------------');
 
-      return resolve(response);
+      return resolve({ response, message, contact, sender });
     })
-    .catch(err => reject(err));
+    .catch(error => reject({ error, message, contact, sender }));
 };
 
 module.exports = sendText;
