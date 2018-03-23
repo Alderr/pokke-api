@@ -23,7 +23,8 @@ const sendText = (resolve, reject, funcParams) => {
       console.log('​-------------------------------');
 
       return resolve(response);
-    });
+    })
+    .catch(err => reject(err));
 };
 
 module.exports = sendText;
