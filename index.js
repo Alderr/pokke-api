@@ -61,15 +61,16 @@ app.post('/pokke', (req, res) => {
   > iterate over array of contacts & [sendEmail] or [sendTextMessage] is called
 
   */
-
+  const { user } = req;
   const { subject, message, contacts } = req.body;
+
   console.log('​-------------------------------------------------------');
   console.log('​subject, message, contacts', subject, message, contacts);
   console.log('​-------------------------------------------------------');
 
   // checkers for input
   if (message !== '' || contacts.length !== 0) {
-    sendPokke(subject, message, contacts);
+    sendPokke(user, subject, message, contacts);
     return res.send('Sending pokke.');
   }
 

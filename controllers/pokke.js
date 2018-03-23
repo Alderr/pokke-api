@@ -6,7 +6,7 @@ const sendText = require('../services/sendText');
 
 const { EMAIL_SENDER, SMS_SENDER } = require('../config');
 
-const sendPokke = (subject, message, contacts) => {
+const sendPokke = (user, subject, message, contacts) => {
   console.log('​--------------------------------------------------------------------');
   console.log('​sendPokke -> subject, message, contacts', subject, message, contacts);
   console.log('​--------------------------------------------------------------------');
