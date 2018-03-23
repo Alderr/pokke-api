@@ -113,7 +113,7 @@ const sendPokke = (userObj, subject, message, contacts) => {
           apiKey,
           subject: response.data.subject,
           message: response.data.message,
-          contact: response.data.contact[0], // sendEmail was given one email
+          contact: response.data.contact[0], // sendEmail uses an array & was sent 1 email
           status: '',
         };
 
@@ -138,46 +138,46 @@ const sendPokke = (userObj, subject, message, contacts) => {
     });
 
   // running all commands to send SMS
-  // Promise.all(arrOfSendTextCommands.map(command => command()))
-  //   .then((responses) => {
-  //     console.log('​----------------------------------');
-  //     console.log('Promise.all SMS -> responses', responses);
-  //     console.log('​----------------------------------');
+  Promise.all(arrOfSendTextCommands.map(command => command()))
+    .then((responses) => {
+      console.log('​----------------------------------');
+      console.log('Promise.all SMS -> responses', responses);
+      console.log('​----------------------------------');
 
-  //     // look thro responses and see if its a SUCCESS/FAILURE
-  //     responses.forEach((response) => {
-  //       console.log('​--------------------------------');
-  //       console.log('​sendPokke -> response', response);
-  //       console.log('​--------------------------------');
+      // look thro responses and see if its a SUCCESS/FAILURE
+      responses.forEach((response) => {
+        console.log('​--------------------------------');
+        console.log('​sendPokke -> response', response);
+        console.log('​--------------------------------');
 
-  //       const log = {
-  //         date: Date.now(),
-  //         apiKey,
-  //         subject: response.data.subject,
-  //         message: response.data.message,
-  //         contact: response.data.contact,
-  //         status: '',
-  //       };
+        const log = {
+          date: Date.now(),
+          apiKey,
+          subject: '',
+          message: response.data.message,
+          contact: response.data.contact, // SMS was sent a string; unlike sendEmail
+          status: '',
+        };
 
-  //       if (response.status === 'resolved') {
-  //         log.status = 'SUCCESS';
-  //       }
+        if (response.status === 'resolved') {
+          log.status = 'SUCCESS';
+        }
 
-  //       else {
-  //         log.status = 'FAILURE';
-  //       }
+        else {
+          log.status = 'FAILURE';
+        }
 
-  //       saveLogToApiKey(apiKeyId, log);
-  //       saveLogToUser(userId, log);
-  //     });
-  //   })
-  //   .catch((err) => {
-  //     console.log('​----------------------');
-  //     console.log('​Promise.all SMS -> err', err);
-  //     console.log('​----------------------');
+        saveLogToApiKey(apiKeyId, log);
+        saveLogToUser(userId, log);
+      });
+    })
+    .catch((err) => {
+      console.log('​----------------------');
+      console.log('​Promise.all SMS -> err', err);
+      console.log('​----------------------');
 
-  //     return err;
-  //   });
+      return err;
+    });
 };
 
 
