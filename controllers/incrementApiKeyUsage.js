@@ -1,23 +1,19 @@
 const { request } = require('graphql-request');
 const { GRAPHQL_SERVER_ENDPOINT } = require('../config');
 
-const saveLogToUser = (userId, log) => {
+const incrementUsage = (apiKeyId) => {
   // graphQL mutation to add logs
-  const query = `mutation ($input: CreateLogInput!) {
-      createLog(input: $input){
+  const query = `mutation {
+      incrementUsage(_id: "${apiKeyId}"){
           _id
+          usage
         }
     }`;
 
-  // variables needed for CreateLogInput! in pokke-graphql-server > typeDefs
-  const { apiKey, subject, message, contact, status } = log;
-
-  const variables = { input: { _id: userId, apiKey, subject, message, contact, status } };
-
-  request(GRAPHQL_SERVER_ENDPOINT, query, variables)
+  request(GRAPHQL_SERVER_ENDPOINT, query)
     .then((response) => {
       console.log('​--------------------------------------');
-      console.log('​saveLogToUSER -> response', response);
+      console.log('​incrementUsage of API KEY -> response', response);
       console.log('​--------------------------------------');
     })
     .catch((err) => {
@@ -26,4 +22,4 @@ const saveLogToUser = (userId, log) => {
     });
 };
 
-module.exports = saveLogToUser;
+module.exports = incrementUsage;
