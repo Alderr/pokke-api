@@ -15,4 +15,7 @@ module.exports = {
   AUTHTOKEN: process.env.AUTHTOKEN,
   ACCOUNTSID: process.env.ACCOUNTSID,
   SMS_SENDER: process.env.SMS_SENDER,
+
+  // GraphQL
+  GRAPHQL_SERVER_ENDPOINT: process.env.GRAPHQL_SERVER_ENDPOINT,
 };
