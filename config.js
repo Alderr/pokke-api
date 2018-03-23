@@ -9,7 +9,7 @@ module.exports = {
   // AWS SES config
   SECRETACCESSKEY: process.env.SECRETACCESSKEY,
   ACCESSKEYID: process.env.ACCESSKEYID,
-  EMAIL_SENDER: process.env.SENDER,
+  EMAIL_SENDER: process.env.EMAIL_SENDER,
 
   // Twilio config
   AUTHTOKEN: process.env.AUTHTOKEN,
