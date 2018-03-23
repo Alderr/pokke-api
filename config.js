@@ -9,4 +9,7 @@ module.exports = {
   SECRETACCESSKEY: process.env.SECRETACCESSKEY,
   ACCESSKEYID: process.env.ACCESSKEYID,
   SENDER: process.env.SENDER,
+  // Twilio config
+  AUTHTOKEN: process.env.AUTHTOKEN,
+  ACCOUNTSID: process.env.ACCOUNTSID,
 };
