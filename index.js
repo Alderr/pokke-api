@@ -36,11 +36,15 @@ app.use((req, res, next) => {
       console.log('​apiKey', apiKey);
       console.log('​---------------');
 
+      // success: authenticated user comes back; failure: err is caught & sent
       return isValidApiKey(apiKey)
         .then((verdict) => {
           console.log('​-----------------');
           console.log('​verdict', verdict);
           console.log('​-----------------');
+
+          // verdict is a valid apiKey + userID
+          req.user = verdict;
 
           return next();
         })
