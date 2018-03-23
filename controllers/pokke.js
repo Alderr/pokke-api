@@ -1,6 +1,6 @@
 const isValidEmail = require('../helpers/isValidEmail');
 const isValidPhoneNumber = require('../helpers/isValidPhoneNumber');
-const createDelayedPromise = require('../helpers/createDelayedPromise');
+const createDelayedPromise = require('../services/createDelayedPromise');
 const sendEmail = require('../services/sendEmail');
 const sendText = require('../services/sendText');
 

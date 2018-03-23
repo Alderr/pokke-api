@@ -2,7 +2,7 @@
 > basically w/ a promise argument;
 > return a new function that executes the promise
 */
-const reflect = require('../services/reflect');
+const reflect = require('./reflect');
 
 const createDelayedPromise = (func, params) => () => reflect(new Promise((resolve, reject) => {
   console.log('​---------------------------------------');
