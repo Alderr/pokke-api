@@ -78,22 +78,22 @@ const sendPokke = (subject, message, contacts) => {
 
   console.log('Running commands...');
 
-  // // running all commands to send Email
-  // Promise.all(arrOfSendEmailCommands.map(command => command()))
-  //   .then((responses) => {
-  //     console.log('​----------------------------------');
-  //     console.log('Promise.all EMAIL -> responses', responses);
-  //     console.log('​----------------------------------');
-  //     //
-  //     return responses;
-  //   })
-  //   .catch((err) => {
-  //     console.log('​----------------------');
-  //     console.log('​Promise.all EMAIL -> err', err);
-  //     console.log('​----------------------');
+  // running all commands to send Email
+  Promise.all(arrOfSendEmailCommands.map(command => command()))
+    .then((responses) => {
+      console.log('​----------------------------------');
+      console.log('Promise.all EMAIL -> responses', responses);
+      console.log('​----------------------------------');
+      //
+      return responses;
+    })
+    .catch((err) => {
+      console.log('​----------------------');
+      console.log('​Promise.all EMAIL -> err', err);
+      console.log('​----------------------');
 
-  //     return err;
-  //   });
+      return err;
+    });
 
   // running all commands to send SMS
   Promise.all(arrOfSendTextCommands.map(command => command()))
